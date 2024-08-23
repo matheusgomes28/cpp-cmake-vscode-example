@@ -1,0 +1,192 @@
+{
+    "version": 3,
+    "configurePresets": [
+        {
+            "name": "conan-deb",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/conan/deb/conan_toolchain.cmake"
+            }
+        },
+        {
+            "name": "conan-rel",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/conan/rel/conan_toolchain.cmake"
+            }
+        },
+        {
+            "name": "rel",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": true
+            },
+            "warnings": {
+                "unusedCli": false
+            }
+        },
+        {
+            "name": "deb",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "BUILD_TESTS": true,
+                "CMAKE_EXPORT_COMPILE_COMMANDS": true
+            }
+        },
+        {
+            "name": "gcc-ninja",
+            "hidden": true,
+            "generator": "Ninja",
+            "cacheVariables": {
+                "CMAKE_CXX_COMPILER": "g++",
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_FLAGS_INIT": "$env{CMAKE_CXX_FLAGS} -Werror -Wall -Wextra -pedantic"
+            }
+        },
+        {
+            "name": "clang-ninja",
+            "hidden": true,
+            "generator": "Ninja",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "clang-17",
+                "CMAKE_CXX_COMPILER": "clang++-17",
+                "CMAKE_CXX_FLAGS_INIT": "$env{CMAKE_CXX_FLAGS} -Werror -Wall -Wextra -pedantic"
+            }
+        },
+        {
+            "name": "vs2022",
+            "hidden": true,
+            "generator": "Visual Studio 17 2022",
+            "cacheVariables": {
+                "CMAKE_CXX_FLAGS_INIT": "$env{CMAKE_CXX_FLAGS_INIT} $env{CMAKE_CXX_FLAGS} /W4 /WX /EHsc"
+            }
+        },
+        {
+            "name": "gcc-rel-ninja",
+            "displayName": "Ninja GCC Release",
+            "binaryDir": "${sourceDir}/build/gcc-rel-ninja",
+            "inherits": ["gcc-ninja", "rel"],
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/gcc-rel-ninja/install"
+            }
+        },
+        {
+            "name": "clang-rel-ninja",
+            "displayName": "Ninja Clang Release",
+            "binaryDir": "${sourceDir}/build/clang-rel-ninja",
+            "inherits": ["clang-ninja", "rel"],
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/clang-rel-ninja/install"
+            }
+        },
+        {
+            "name": "clang-rel-ninja-conan",
+            "displayName": "Ninja Clang/Conan Release",
+            "binaryDir": "${sourceDir}/build/clang-rel-ninja-conan",
+            "inherits": ["clang-ninja", "rel", "conan-rel"],
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/clang-rel-ninja-conan/install"
+            }
+        },
+        {
+            "name": "gcc-deb-ninja",
+            "displayName": "Ninja GCC Debug",
+            "binaryDir": "${sourceDir}/build/gcc-deb-ninja",
+            "inherits": ["gcc-ninja", "deb", "conan-deb"],
+            "cacheVariables": {
+                "CMAKE_CXX_FLAGS": "-O0 --coverage -g -fsanitize=address -fstandalone-debug",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/gcc-deb-ninja/install"
+            }
+        },
+        {
+            "name": "clang-deb-ninja",
+            "displayName": "Ninja Clang Debug",
+            "binaryDir": "${sourceDir}/build/clang-deb-ninja",
+            "inherits": ["clang-ninja", "deb"],
+            "cacheVariables": {
+                "CMAKE_CXX_FLAGS": "-O0 --coverage -g -fsanitize=address -fstandalone-debug",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/clang-deb-ninja/install"
+            }
+        },
+        {
+            "name": "clang-deb-ninja-conan",
+            "displayName": "Ninja Clang/Conan Debug",
+            "binaryDir": "${sourceDir}/build/clang-deb-ninja-conan",
+            "inherits": ["clang-ninja", "deb", "conan-deb"],
+            "cacheVariables": {
+                "CMAKE_CXX_FLAGS": "-O0 --coverage -g -fsanitize=address",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/clang-deb-ninja-conan/install"
+            }
+        },
+        {
+            "name": "vs2022-rel",
+            "displayName": "Visual Studio 2022 Release",
+            "binaryDir": "${sourceDir}/build/vs2022-rel",
+            "inherits": ["vs2022", "rel"],
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/vs2022-rel/install"
+            }
+        },
+        {
+            "name": "vs2022-deb",
+            "displayName": "Visual Studio 2022 Debug",
+            "binaryDir": "${sourceDir}/build/vs2022-deb",
+            "inherits": ["vs2022", "deb", "conan-deb"],
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/vs2022-deb/install"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "vs2022-rel",
+            "displayName": "Visual Studio 2022 Release Build",
+            "configurePreset": "vs2022-rel",
+            "configuration": "Release"
+        },
+        {
+            "name": "vs2022-deb",
+            "displayName": "Visual Studio 2022 Debug Build",
+            "configurePreset": "vs2022-deb",
+            "configuration": "Debug"
+        },
+        {
+            "name": "gcc-deb-ninja",
+            "displayName": "GCC Ninja Debug Build",
+            "configurePreset": "gcc-deb-ninja",
+            "configuration": "Debug"
+        },
+        {
+            "name": "clang-deb-ninja",
+            "displayName": "Clang Ninja Debug Build",
+            "configurePreset": "clang-deb-ninja",
+            "configuration": "Debug"
+        },
+        {
+            "name": "clang-deb-ninja-conan",
+            "displayName": "Clang Ninja/Conan Debug Build",
+            "configurePreset": "clang-deb-ninja-conan",
+            "configuration": "Debug"
+        },
+        {
+            "name": "gcc-rel-ninja",
+            "displayName": "GCC Ninja Release Build",
+            "configurePreset": "gcc-rel-ninja",
+            "configuration": "Release"
+        },
+        {
+            "name": "clang-rel-ninja",
+            "displayName": "Clang Ninja Release Build",
+            "configurePreset": "clang-rel-ninja",
+            "configuration": "Release"
+        },
+        {
+            "name": "clang-rel-ninja-conan",
+            "displayName": "Clang Ninja/Conan Release Build",
+            "configurePreset": "clang-rel-ninja-conan",
+            "configuration": "Release"
+        }
+    ]
+}
